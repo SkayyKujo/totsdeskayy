@@ -14,7 +14,8 @@
     body {
       margin: 0;
       padding: 0;
-      background: url('https://media.contentapi.ea.com/content/dam/ea/fc/fc-25/common/tots/fc25-tots-generic-feat-img-16x9.jpg') no-repeat center center fixed;
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                  url('Cover-TOTS-FC-25.png') no-repeat center center fixed;
       background-size: cover;
       font-family: 'BristoneDisplay', sans-serif;
       text-align: center;
@@ -107,43 +108,38 @@
 
 <body>
 
-  <h1>Temps restant jusqu'à 19h</h1>
-  <div id="timer">--:--:--</div>
+<h1>Temps restant jusqu'à 19h</h1>
+<div id="timer">--:--:--</div>
 
-  <audio id="background-music" loop>
-    <source src="joycrookes.mp3" type="audio/mpeg">
-    Ton navigateur ne supporte pas l'audio HTML5.
-  </audio>
+<audio id="background-music" loop>
+  <source src="joycrookes.mp3" type="audio/mpeg">
+  Ton navigateur ne supporte pas l'audio HTML5.
+</audio>
 
-  <button id="toggle-music" onclick="toggleMusic()">▶ Musique</button>
-  <br><br>
-  <label for="volume-control">🔊 Volume :</label>
-  <input type="range" id="volume-control" min="0" max="1" step="0.01" value="1" onchange="setVolume(this.value)">
+<button id="toggle-music" onclick="toggleMusic()">▶ Musique</button>
+<br><br>
+<label for="volume-control">🔊 Volume :</label>
+<input type="range" id="volume-control" min="0" max="1" step="0.01" value="1" onchange="setVolume(this.value)">
 
-  <div class="player-container">
-    <div class="player-card">
-      <div class="player-name">Skayy</div>
-      <div id="counter-skayy" class="counter">0</div>
-      <div id="trophy-skayy" class="trophy">🏆</div>
-      <button class="btn" onclick="addTots('skayy')">+1 TOTS</button>
-    </div>
-    <div class="player-card">
-      <div class="player-name">Nayloxx</div>
-      <div id="counter-nayloxx" class="counter">0</div>
-      <div id="trophy-nayloxx" class="trophy">🏆</div>
-      <button class="btn" onclick="addTots('nayloxx')">+1 TOTS</button>
-    </div>
-    <div class="player-card">
-      <div class="player-name">Zartex</div>
-      <div id="counter-zartex" class="counter">0</div>
-      <div id="trophy-zartex" class="trophy">🏆</div>
-      <button class="btn" onclick="addTots('zartex')">+1 TOTS</button>
-    </div>
+<div class="player-container">
+  <div class="player-card">
+    <div class="player-name">Skayy</div>
+    <div id="counter-skayy" class="counter">0</div>
+    <div id="trophy-skayy" class="trophy">🏆</div>
   </div>
+  <div class="player-card">
+    <div class="player-name">Nayloxx</div>
+    <div id="counter-nayloxx" class="counter">0</div>
+    <div id="trophy-nayloxx" class="trophy">🏆</div>
+  </div>
+  <div class="player-card">
+    <div class="player-name">Zartex</div>
+    <div id="counter-zartex" class="counter">0</div>
+    <div id="trophy-zartex" class="trophy">🏆</div>
+  </div>
+</div>
 
-  <button class="reset-btn" onclick="resetAll()">Reset tous les compteurs</button>
-  <br><br>
-  <a href="leaderboard.html" class="btn">Voir le Leaderboard 🏆</a>
+<a href="leaderboard.html" class="btn">Voir le Leaderboard 🏆</a>
 
 <script>
   window.addEventListener('load', () => {
@@ -167,17 +163,17 @@
     music.volume = volume;
   }
 
-  const counters = {
-    skayy: parseInt(localStorage.getItem('skayy')) || 0,
-    nayloxx: parseInt(localStorage.getItem('nayloxx')) || 0,
-    zartex: parseInt(localStorage.getItem('zartex')) || 0
-  };
+  async function loadCounters() {
+    const response = await fetch('compteurs.json');
+    const data = await response.json();
+    document.getElementById('counter-skayy').textContent = data.skayy;
+    document.getElementById('counter-nayloxx').textContent = data.nayloxx;
+    document.getElementById('counter-zartex').textContent = data.zartex;
 
-  function updateCounters() {
-    for (const player in counters) {
-      document.getElementById(`counter-${player}`).textContent = counters[player];
+    // Gérer les trophées
+    for (const player of ['skayy', 'nayloxx', 'zartex']) {
       const trophy = document.getElementById(`trophy-${player}`);
-      if (counters[player] > 0 && counters[player] % 5 === 0) {
+      if (data[player] > 0 && data[player] % 5 === 0) {
         trophy.style.display = 'block';
       } else {
         trophy.style.display = 'none';
@@ -185,21 +181,7 @@
     }
   }
 
-  function addTots(player) {
-    counters[player]++;
-    localStorage.setItem(player, counters[player]);
-    updateCounters();
-  }
-
-  function resetAll() {
-    for (const player in counters) {
-      counters[player] = 0;
-      localStorage.setItem(player, 0);
-    }
-    updateCounters();
-  }
-
-  updateCounters();
+  loadCounters();
 
   let alertShown = false;
   function updateTimer() {
@@ -230,9 +212,10 @@
 
   function confettiExplosion() {
     alert("TOTS TIME 🎉 !");
-    // Ici tu peux ajouter une vraie animation de confettis
+    // Ici tu peux ajouter une animation confettis si tu veux
   }
 </script>
 
 </body>
 </html>
+
