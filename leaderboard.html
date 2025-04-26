@@ -68,6 +68,24 @@
     .back-btn:hover {
       background-color: #e6c200;
     }
+    #toggle-leaderboard-music, #leaderboard-volume {
+      margin-top: 20px;
+    }
+    #toggle-leaderboard-music {
+      background-color: #FFD700;
+      color: black;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    #toggle-leaderboard-music:hover {
+      background-color: #e6c200;
+    }
+    #leaderboard-volume {
+      width: 200px;
+    }
     @media (max-width: 768px) {
       .leaderboard-entry {
         width: 90%;
@@ -80,6 +98,16 @@
 
   <h1>🏆 King of Packs 🏆</h1>
 
+  <audio id="leaderboard-music" loop>
+    <source src="UEFA Champions League Anthem (1).mp3" type="audio/mpeg">
+    Ton navigateur ne supporte pas l'audio HTML5.
+  </audio>
+
+  <button id="toggle-leaderboard-music" onclick="toggleLeaderboardMusic()">▶ Musique Leaderboard</button>
+  <br><br>
+  <label for="leaderboard-volume">🔊 Volume :</label>
+  <input type="range" id="leaderboard-volume" min="0" max="1" step="0.01" value="1" onchange="setLeaderboardVolume(this.value)">
+
   <div id="leaderboard"></div>
 
   <a href="index.html" class="back-btn">⬅ Retour à l'accueil</a>
@@ -88,6 +116,23 @@
   window.addEventListener('load', () => {
     document.body.classList.add('loaded');
   });
+
+  const leaderboardMusic = document.getElementById('leaderboard-music');
+  const toggleLeaderboardButton = document.getElementById('toggle-leaderboard-music');
+
+  function toggleLeaderboardMusic() {
+    if (leaderboardMusic.paused) {
+      leaderboardMusic.play();
+      toggleLeaderboardButton.textContent = "⏸ Pause musique Leaderboard";
+    } else {
+      leaderboardMusic.pause();
+      toggleLeaderboardButton.textContent = "▶ Musique Leaderboard";
+    }
+  }
+
+  function setLeaderboardVolume(volume) {
+    leaderboardMusic.volume = volume;
+  }
 
   const players = ['skayy', 'nayloxx', 'zartex'];
 
